@@ -82,7 +82,7 @@ class ArrowField {
 		stroke(intensity);
 		strokeWeight(3);
 		fill(intensity);
-		translate(pos.x, pos.y);
+		translate(pos.x - vec.x / 2, pos.y - vec.y / 2); // Center the arrow around the position
 		line(0, 0, vec.x, vec.y);
 		rotate(vec.heading());
 		let arrowSize = 7;
@@ -98,12 +98,12 @@ mouse_charge = undefined;
 
 function setup() {
 	createCanvas(800, 800);
-	mouse_charge = new Charge(+1, createVector(mouseX, mouseY));
-
+	field.charges.push(new Charge(+1, createVector(mouseX, mouseY))); // Mouse charge
 	field.charges.push(new Charge(+1, createVector(400, 400)));
 	field.charges.push(new Charge(-1, createVector(600, 400)));
 	field.charges.push(new Charge(-1, createVector(200, 400)));
 
+	mouse_charge = field.charges[0];
 	arrows = new ArrowField(15, 15, function(pos){return field.value(pos);});
 }
 
@@ -129,7 +129,7 @@ function draw() {
 }
 
 function mouseClicked() {
-	for (var i = 0; i < field.charges.length; ++i) {
+	for (var i = 1; i < field.charges.length; ++i) {
 		const charge = field.charges[i];
 
 		if (mouseX >= charge.pos.x - charge.get_radius() && mouseX <= charge.pos.x + charge.get_radius()
@@ -141,6 +141,7 @@ function mouseClicked() {
 	}
 
 	field.charges.push(mouse_charge.copy());
+	//mouse_charge = field.charges[0];
 }
 
 function mouseWheel(event) {
