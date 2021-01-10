@@ -96,12 +96,13 @@ class ArrowField {
 	draw() {
 		for (var y = 1; y < this.count.y + 1; ++y) {
 			for (var x = 1; x < this.count.x + 1; ++x) {
-				var pos = createVector(width / (this.count.x + 1) * x, height / (this.count.y + 1) * y);
+				const pos = createVector(width / (this.count.x + 1) * x, height / (this.count.y + 1) * y);
 				var val = this.val_gen(pos);
-				var intensity = 255;
+				const mag = val.mag();
 
-				if (val.magSq() != 0) {
-					this.drawArrow(pos, val.mult(1 / val.mag()).mult(20), 255);
+				if (mag != 0) {
+					const intensity = 255 * (mag ** (2/3) * 1000); // No mathematical reason, it looks good
+					this.drawArrow(pos, val.mult(1 / mag).mult(20), intensity);
 				}
 			}
 		}
