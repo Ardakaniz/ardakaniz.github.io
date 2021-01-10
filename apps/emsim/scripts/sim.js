@@ -47,11 +47,13 @@ class Charge {
 			const char_size = text_size / 4;
 
 			var val_str = str(this.val);
+			var x_offset = val_str.length;
 			if (this.val > 0) {
 				val_str = "+" + val_str;
+				x_offset += 2; // Because the "+" seems to be quite big, 1 is not sufficient
 			}
 
-			const text_pos = this.pos.copy().add(-val_str.length * char_size, +char_size);
+			const text_pos = this.pos.copy().add(-x_offset* char_size, +char_size);
 
 			textSize(text_size);
 			fill(255);
