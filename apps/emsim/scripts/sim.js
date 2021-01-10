@@ -128,14 +128,14 @@ arrows = undefined;
 mouse_charge = undefined;
 
 function setup() {
-	createCanvas(800, 800);
-	field.charges.push(new Charge(+1, createVector(mouseX, mouseY))); // Mouse charge
-	field.charges.push(new Charge(+1, createVector(400, 400)));
-	field.charges.push(new Charge(-1, createVector(600, 400)));
-	field.charges.push(new Charge(-1, createVector(200, 400)));
+	createCanvas(1000, 1000);
+	field.charges.push(new Charge(0, createVector(mouseX, mouseY))); // Mouse charge
+	field.charges.push(new Charge(+1, createVector(500, 500)));
+	field.charges.push(new Charge(-1, createVector(700, 500)));
+	field.charges.push(new Charge(-1, createVector(300, 500)));
 
 	mouse_charge = field.charges[0];
-	arrows = new ArrowField(15, 15, function(pos){return field.value(pos);});
+	arrows = new ArrowField(25, 25, function(pos){return field.value(pos);});
 }
 
 function draw() {	
@@ -163,8 +163,8 @@ function mouseClicked() {
 	for (var i = 1; i < field.charges.length; ++i) {
 		const charge = field.charges[i];
 
-		if (mouseX >= charge.pos.x - charge.get_radius() && mouseX <= charge.pos.x + charge.get_radius()
-			&& mouseY >= charge.pos.y - charge.get_radius() && mouseY <= charge.pos.y + charge.get_radius())
+		if (mouseX >= charge.pos.x - charge.get_radius() / 2 && mouseX <= charge.pos.x + charge.get_radius() / 2
+			&& mouseY >= charge.pos.y - charge.get_radius() / 2 && mouseY <= charge.pos.y + charge.get_radius() / 2)
 		{
 			field.charges.splice(i, 1);
 			return; // We don't add the new charge if we deleted one
