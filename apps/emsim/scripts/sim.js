@@ -2,10 +2,23 @@ class Charge {
 	constructor(val, pos) {
 		this.val = val;
 		this.pos = pos;
+		this.max_radius = 20;
 	}
 
 	copy() {
 		return new Charge(this.val, this.pos.copy());
+	}
+
+	get_color() {
+		if (this.val > 0) { // Positive charge = red
+			return createVector(150 + 30 * this.val, 0, 0);
+		}
+		else if (this.val < 0) { // Negative charge = blue
+			return createVector(0, 0, 150 + 30 * abs(this.val));
+		}
+		else { // Neutral charge = white
+			return createVector(255, 255, 255);
+		}
 	}
 
 	get_radius() {
@@ -13,22 +26,37 @@ class Charge {
 			return 10;
 		}
 		else {
-			return abs(10 * this.val);
+			const raw_radius = 10 + 2 * abs(this.val);
+			
+			if (raw_radius > this.max_radius) { // radius limit
+				return this.max_radius;
+			}
+			return raw_radius;
 		}
 	}
 
 	draw() {
+		const radius = this.get_radius();
+
 		push();
-		if (this.val > 0) { // Positive charge = red
-			fill(255, 0, 0);
+		fill(this.get_color().x, this.get_color().y, this.get_color().z);
+		circle(this.pos.x, this.pos.y, radius);
+
+		if (radius >= this.max_radius) {
+			const text_size = this.max_radius / 2;
+			const char_size = text_size / 4;
+
+			var val_str = str(this.val);
+			if (this.val > 0) {
+				val_str = "+" + val_str;
+			}
+
+			const text_pos = this.pos.copy().add(-val_str.length * char_size, +char_size);
+
+			textSize(text_size);
+			fill(255);
+			text(val_str, text_pos.x, text_pos.y);
 		}
-		else if (this.val < 0) { // Negative charge = blue
-			fill(0, 0, 255);
-		}
-		else { // Neutral charge = white
-			fill(255, 255, 255);
-		}
-		circle(this.pos.x, this.pos.y, this.get_radius());
 		pop();
 	}
 }
@@ -47,7 +75,7 @@ class Field {
 			charge_effect.sub(this.charges[i].pos);
 
 			if (charge_effect.magSq() > 1e-5) {
-				charge_effect.mult(this.charges[i].val / (charge_effect.mag() * charge_effect.magSq()));
+				charge_effect.mult(this.charges[i].val / (charge_effect.mag() * charge_effect.magSq())); // E(M) = q * k / OM^3 (here k = 1 instead of 1/4*pi*epsilon_0)
 			}
 			
 			sum.add(charge_effect);
@@ -110,13 +138,6 @@ function setup() {
 function draw() {	
 	background(0); // bl4ck
 
-	push()
-	textSize(15)
-	fill(255)
-	text("Mouse Wheel: select charge value", 0, 15);
-	text("Click: add/remove charge", 0, 30);
-	pop()
-
 	mouse_charge.pos.x = mouseX;
 	mouse_charge.pos.y = mouseY;
 	mouse_charge.draw();
@@ -126,6 +147,13 @@ function draw() {
 	for (var i = 0; i < field.charges.length; ++i) {
 		field.charges[i].draw();
 	}
+
+	push()
+	textSize(15)
+	fill(255)
+	text("Mouse Wheel: select charge value", 0, 15);
+	text("Click: add/remove charge", 0, 30);
+	pop()
 }
 
 function mouseClicked() {
@@ -141,7 +169,6 @@ function mouseClicked() {
 	}
 
 	field.charges.push(mouse_charge.copy());
-	//mouse_charge = field.charges[0];
 }
 
 function mouseWheel(event) {
