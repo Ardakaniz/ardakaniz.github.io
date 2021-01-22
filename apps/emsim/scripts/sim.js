@@ -78,9 +78,22 @@ class Field {
 
 			if (charge_effect.magSq() != 0) {
 				charge_effect.mult(this.charges[i].val / (charge_effect.mag() * charge_effect.magSq())); // E(M) = q * k / OM^3 (here k = 1 instead of 1/4*pi*epsilon_0)
+				sum.add(charge_effect);
 			}
-			
-			sum.add(charge_effect);
+		}
+
+		return sum;
+	}
+
+	potential(pos) {
+		var sum = 0;
+		
+		for (var i = 0; i < this.charges.length; i++) {
+			const dist = pos.dist(this.charges[i].pos);
+
+			if (dist != 0) {
+				sum += this.charges[i].val / dist; // V(M) = q * k / OM (k = 1 instead of 1/4*pi*epsilon_0)
+			}
 		}
 
 		return sum;
