@@ -127,22 +127,30 @@ field = new Field([]);
 arrows = undefined;
 mouse_charge = undefined;
 
+const arrows_count = 25;
+
 function setup() {
 	createCanvas(1000, 1000);
 	field.charges.push(new Charge(0, createVector(mouseX, mouseY))); // Mouse charge
-	field.charges.push(new Charge(+1, createVector(500, 500)));
-	field.charges.push(new Charge(-1, createVector(700, 500)));
-	field.charges.push(new Charge(-1, createVector(300, 500)));
+	field.charges.push(new Charge(+1, createVector(width / 2, height / 2)));
+	field.charges.push(new Charge(-1, createVector(width / 2 + (width / (arrows_count + 1)) * 5, height / 2)));
+	field.charges.push(new Charge(-1, createVector(width / 2 - (width / (arrows_count + 1)) * 5, height / 2)));
 
 	mouse_charge = field.charges[0];
-	arrows = new ArrowField(25, 25, function(pos){return field.value(pos);});
+	arrows = new ArrowField(arrows_count, arrows_count, function(pos){return field.value(pos);});
 }
 
 function draw() {	
 	background(0); // bl4ck
 
-	mouse_charge.pos.x = mouseX;
-	mouse_charge.pos.y = mouseY;
+	if (keyIsPressed == true && keyCode == SHIFT) {
+		mouse_charge.pos.x = round(map(mouseX, 0, width, 0, arrows_count + 1)) * (width / (arrows_count + 1));
+		mouse_charge.pos.y = round(map(mouseY, 0, height, 0, arrows_count + 1)) * (height / (arrows_count + 1));
+	}
+	else {
+		mouse_charge.pos.x = mouseX;
+		mouse_charge.pos.y = mouseY;
+	}
 	mouse_charge.draw();
 	
 	arrows.draw();
