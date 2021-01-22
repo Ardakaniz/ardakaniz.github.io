@@ -159,11 +159,19 @@ function draw() {
 		field.charges[i].draw();
 	}
 
-	push()
-	textSize(15)
-	fill(255)
-	text("Mouse Wheel: select charge value", 0, 15);
-	text("Click: add/remove charge", 0, 30);
+	draw_text();
+}
+
+function draw_text() {
+	const shadow_text = (mouseX <= 240 && mouseY <= 60)
+
+	push();
+	textSize(15);
+	if (shadow_text) { fill(255, 255, 255, 50); }
+	else             { fill(255); }
+	text("Click: add/remove charge", 0, 15);
+	text("Mouse Wheel: select charge value", 0, 30);
+	text("Shift: Snap cursor on grid", 0, 45);
 	pop()
 }
 
