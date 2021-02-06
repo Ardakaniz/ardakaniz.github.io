@@ -200,7 +200,12 @@ function mouseClicked() {
 		}
 	}
 
-	field.charges.push(mouse_charge.copy());
+	if (mouse_charge.val != 0) {
+		field.charges.push(mouse_charge.copy());
+	}
+	else {
+		// Draw equipotentials
+	}
 }
 
 function mouseWheel(event) {
