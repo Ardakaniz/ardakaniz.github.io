@@ -53,7 +53,7 @@ class Charge {
 				x_offset += 2; // Because the "+" seems to be quite big, 1 is not sufficient
 			}
 
-			const text_pos = this.pos.copy().add(-x_offset * char_size, +char_size);
+			const text_pos = p5.Vector.add(this.pos, -x_offset * char_size, +char_size);
 
 			textSize(text_size);
 			fill(255);
@@ -73,8 +73,7 @@ class Field {
 		var sum = new p5.Vector();
 		
 		for (var i = 0; i < this.charges.length; i++) {
-			var charge_effect = pos.copy();
-			charge_effect.sub(this.charges[i].pos);
+			var charge_effect = p5.Vector.sub(pos, this.charges[i].pos);
 
 			if (charge_effect.magSq() != 0) {
 				charge_effect.mult(this.charges[i].val / (charge_effect.mag() * charge_effect.magSq())); // E(M) = q * k / OM^3 (here k = 1 instead of 1/4*pi*epsilon_0)
@@ -115,7 +114,7 @@ class ArrowField {
 
 				if (mag != 0) {
 					const intensity = 255 * (mag ** (2/3) * 1000); // No mathematical reason, it looks good
-					this.drawArrow(pos, val.mult(1 / mag).mult(20), intensity);
+					this.drawArrow(pos, val.normalize().mult(20), intensity);
 				}
 			}
 		}
